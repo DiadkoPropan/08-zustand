@@ -28,16 +28,15 @@ export async function fetchNotes(
   tag?: Tag,
   sortBy?: SortBy
 ): Promise<FetchNotesResponse> {
-  const params = new URLSearchParams({
+  const params = {
     search,
-    page: String(page),
+    page,
     ...(tag ? { tag } : {}),
     ...(sortBy ? { sortBy } : {}),
-  })
+  }
 
-  const res = await fetch(`/api/notes?${params}`)
-  if (!res.ok) throw new Error("Failed to fetch notes")
-  return res.json() as Promise<FetchNotesResponse>
+  const { data } = await axios.get<FetchNotesResponse>("notes", { params })
+  return data
 }
 
 export const createNote = async (note: NewNoteData) => {
